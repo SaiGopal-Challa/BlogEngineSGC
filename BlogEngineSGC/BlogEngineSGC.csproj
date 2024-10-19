@@ -4,13 +4,26 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Components\" />
-    <Folder Include="Services\" />
-    <Folder Include="Views\Account\" />
-    <Folder Include="Views\Blog\" />
+    <Folder Include="Resource\" />
+    <Folder Include="Services\Resources\" />
+    <Folder Include="wwwroot\Posts\files\" />
+	  
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TinyMCE" Version="7.4.1" />
+    <PackageReference Include="WebMarkupMin.AspNetCore8" Version="2.17.0" />
+    <PackageReference Include="WebMarkupMin.Core" Version="2.17.0" />
+    <PackageReference Include="WebMarkupMin.NUglify" Version="2.17.0" />
+    <PackageReference Include="WilderMinds.MetaWeblog" Version="5.1.3" />
   </ItemGroup>
 
 </Project>

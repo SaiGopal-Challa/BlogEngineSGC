@@ -1,0 +1,175 @@
+﻿@model List<Post>
+@inject IOptionsSnapshot<BlogsSettings> settings
+@using BlogEngineSGC.Models;
+@using BlogEngineSGC.CommonClasses;
+@using Microsoft.AspNetCore.Http;
+
+@inject IHttpContextAccessor _httpContextAccessor
+
+@{
+    int currentPage = int.Parse(ViewContext.RouteData.Values[Constants.page] as string ?? "0");
+
+    int totalPosts;
+    //   totalPosts = int.TryParse(ViewData[Constants.TotalPostCount].ToString(), out totalPosts) ? totalPosts : 0;
+    totalPosts = int.TryParse("10", out totalPosts) ? totalPosts : 0;
+
+    int totalPages = (totalPosts / this.settings.Value.PostsPerPage) - (totalPosts % this.settings.Value.PostsPerPage == 0 ? 1 : 0);
+}
+
+
+<div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
+    <div class="col-md-6 px-0">
+        <h1 class="display-4 fst-italic">Title of a longer featured blog post</h1>
+        <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what most interesting in this post contents.</p>
+        <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-md-6">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-primary">World</strong>
+                <h3 class="mb-0">Featured post</h3>
+                <div class="mb-1 text-muted">Nov 12</div>
+                <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="stretched-link">Continue reading</a>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+                <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+                <strong class="d-inline-block mb-2 text-success">Design</strong>
+                <h3 class="mb-0">Post title</h3>
+                <div class="mb-1 text-muted">Nov 11</div>
+                <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="stretched-link">Continue reading</a>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+                <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<article b-7ovnnn4vno="" class="blog-post"> <h2 b-7ovnnn4vno="" class="blog-post-title">New feature</h2> 
+    <p b-7ovnnn4vno="" class="blog-post-meta">October 19, 2024 by <a b-7ovnnn4vno="" href="#">SGC</a></p> 
+    <p b-7ovnnn4vno="">This is some additional paragraph placeholder content. It has been written to fill the available space and show how a longer snippet of text affects the surrounding content. We'll repeat it often to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p> <ul b-7ovnnn4vno=""><li b-7ovnnn4vno="">First list item</li> <li b-7ovnnn4vno="">Second list item with a longer description</li> <li b-7ovnnn4vno="">Third list item to close it out</li></ul> <p b-7ovnnn4vno="">This is some additional paragraph placeholder content. It's a slightly shorter version of the other highly repetitive body text used throughout.</p> </article>
+
+@foreach (var post in Model)
+{
+
+
+
+    <article class="blog-post" itemscope itemtype="http://schema.org/BlogPosting" itemprop="blogPost">
+
+        <header>
+            <h2 class="blog-post-title" itemprop="name headline"><a href="@post.GetLink()" rel="canonical" itemprop="url">@post.Title</a></h2>
+
+            <time datetime="@post.PubDate.ToString("s")" itemprop="datePublished">Published @post.PubDate.ToString("MMdd, yyyy")</time>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Blog" asp-action="edit" asp-route-id="@post.ID" title="Edit the post">Edit post</a>
+            }
+        </header>
+
+
+        @* <p class="blog-post-meta">December 23, 2020 by <a href="#">Jacob</a></p>*@
+
+
+        @*   <div itemprop="articleBody mainEntityOfPage" cdnify>
+            @if (showFullPost || settings.Value.ListView == PostListView.FullPosts)
+            {
+            @Html.Raw(post.RenderContent())
+            }
+            else if (settings.Value.ListView == PostListView.TitlesAndExcerpts)
+            {
+            @Html.Raw(post.Excerpt)
+            }
+            </div>*@
+
+        <div itemprop="articleBody mainEntityOfPage" cdnify>
+
+
+            @Html.Raw(post.Excerpt)
+
+        </div>
+
+        <footer>
+            @if (post.Categories.Any())
+            {
+                <ul class="categories">
+                    <li> Posted in </li>
+                    @foreach (string cat in post.Categories)
+                    {
+                        <li itemprop="articleSection"><a asp-controller="Blog" asp-action="Category" asp-route-category="@cat.ToLowerInvariant()" asp-route-page="">@cat</a></li>
+                    }
+                </ul>
+                <text>and has</text>
+
+                
+            }
+
+            <a href="@post.GetLink()#comments" itemprop="discussionUrl" title="Go to the comments section">
+                <span itemprop="commentCount">@post.Comments.Count</span> @(post.Comments.Count == 1 ? "comment" : "comments")
+            </a>
+
+            @*<meta itemprop="author" content="@settings.Value.Owner" />
+                <meta itemprop="dateModified" content="@post.LastModified.ToString("s")" />
+                <meta itemprop="mainEntityOfPage" content="@(host + Model.GetLink())" />*@
+        </footer>
+    </article>
+
+
+
+
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        @*@section Scripts {
+            <script src="~/js/admin.js" async defer></script>
+            <link rel="stylesheet" href="~/css/admin.scss" />
+            }*@
+    }
+
+}
+
+
+<nav class="blog-pagination" aria-label="Pagination">
+    <a class="btn btn-outline-primary" href="#">Older</a>
+    <a class="btn btn-outline-secondary disabled">Newer</a>
+
+
+</nav>
+
+<nav class="blog-pagination" aria-label="Pagination" ">
+    @if (currentPage < totalPages)
+    {
+    <a rel="prev" href="@ViewData[Constants.prev]" title="Older posts">&laquo; Older</a>
+    }
+    @if (currentPage > 0)
+    {
+    <a rel="next" href="@ViewData[Constants.next]" title="Newer posts">Newer &raquo;</a>
+    }
+    <br /><br />
+
+    @section Head
+    {
+    @if ( currentPage < totalPages)
+    {
+    <link rel="prev" href="@ViewData[Constants.prev]" />
+    }
+    @if (currentPage > 0)
+    {
+    <link rel="next" href="@ViewData[Constants.next]" />
+    }
+    }
+
+</nav>
