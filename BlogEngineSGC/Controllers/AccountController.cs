@@ -62,5 +62,22 @@ namespace BlogEngineSGC.Controllers
             await this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
             return this.LocalRedirect("/");
         }
+
+        [Route("/LoginUser")]
+        [HttpPost]
+        public async Task<IActionResult> LoginUser()
+        {
+            //controller to call AuthServiceSGC service to do authentication
+
+            return null;
+        }
+        [Route("/LogoutUser")]
+        [HttpPost]
+        public async Task<IActionResult> LogoutUser()
+        {
+            //controller to call AuthServiceSGC service to logout
+
+            return null;
+        }
     }
 }
